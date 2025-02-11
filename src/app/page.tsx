@@ -13,6 +13,10 @@ export default function Home() {
         Go to Equipment Form
       </Link>
 
+      <Link href="/equipments_form/equipment_table/" className="text-blue-600 hover:underline">
+        Go to Equipment Table
+      </Link>
+
       <Link href="/equipments_form/maintenance_form" className="text-blue-600 hover:underline">
         Go to Maintenance Form
       </Link>

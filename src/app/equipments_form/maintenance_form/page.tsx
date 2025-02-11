@@ -3,13 +3,13 @@ import React from "react";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { schema, equipmentList, maintenanceTypes, priorities, completionStatuses  } from "../zodSchemas";
+import { maintenanceSchema, equipmentList, maintenanceTypes, priorities, completionStatuses  } from "../zodSchemas";
 
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<typeof maintenanceSchema>;
 
 const FormMaintenance: React.FC = () => {
   const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(maintenanceSchema),
     defaultValues: { partsReplaced: [] },
   });
   

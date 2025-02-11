@@ -7,8 +7,8 @@ export const completionStatuses = ["Complete", "Incomplete", "Pending Parts"] as
 export const department = ["Machining", "Assembly", "Packaging", "Shipping"] as const;
 export const statusValues = ["Operational", "Down", "Maintenance", "Retired"] as const;
 
-export const schema = z.object({
-  //schema for the Equipment form
+// ✅ Equipment Form Schema
+export const equipmentSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long"),
   location: z.string().min(1, "Location is required"),
   department: z.enum(department, { message: "Invalid department" }),
@@ -16,8 +16,12 @@ export const schema = z.object({
   serialNumber: z.string().regex(/^[a-zA-Z0-9]+$/, "Serial Number must be alphanumeric"),
   installDate: z.string().refine((val) => new Date(val) < new Date(), "Install Date must be a past date"),
   status: z.enum(statusValues, { message: "Invalid status" }),
-  
-  //schema for the Maintenance form
+});
+
+export type EquipmentFormData = z.infer<typeof equipmentSchema>;
+
+// ✅ Maintenance Form Schema
+export const maintenanceSchema = z.object({
   equipment: z.enum(equipmentList, { message: "Equipment is required" }),
   date: z.string().refine((val) => new Date(val) <= new Date(), "Date cannot be in the future"),
   type: z.enum(maintenanceTypes, { message: "Invalid maintenance type" }),
@@ -29,4 +33,4 @@ export const schema = z.object({
   completionStatus: z.enum(completionStatuses, { message: "Invalid status" }),
 });
 
-export type FormData = z.infer<typeof schema>;
+export type MaintenanceFormData = z.infer<typeof maintenanceSchema>;
