@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -9,12 +9,15 @@ export default function Home() {
         <p className="text-gray-600">Please fill out the form below:</p>
       </div>
 
-      <Link href="/forms">Go to Equipment Form</Link>
-     
+      <Link href="/equipments_form" className="text-blue-600 hover:underline">
+        Go to Equipment Form
+      </Link>
 
-      <footer className="text-center text-sm text-gray-500">
-        Challenge
-      </footer>
+      <Link href="/equipments_form/maintenance_form" className="text-blue-600 hover:underline">
+        Go to Maintenance Form
+      </Link>
+
+      <footer className="text-center text-sm text-gray-500">Challenge</footer>
     </div>
   );
 }
