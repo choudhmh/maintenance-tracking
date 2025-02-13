@@ -13,6 +13,12 @@ const FormEquipment: React.FC = () => {
     resolver: zodResolver(equipmentSchema),
   });
 
+  // const [data, setData] = useState<EquipmentFormData[]>([]);
+  // const [search, setSearch] = useState(""); // For filtering by name
+  // const [statusFilter, setStatusFilter] = useState(""); // For filtering by status
+  // const [sortColumn, setSortColumn] = useState<keyof EquipmentFormData | null>(null);
+  // const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
   const onSubmit: SubmitHandler<FormData> = (data) => {
     const existingData = JSON.parse(localStorage.getItem("equipmentData") || "[]");
 
