@@ -12,6 +12,10 @@ const MaintenanceTable: React.FC = () => {
   // Search and filtering state
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  
+  // Date range filtering state
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   // Grouping and sorting state
   const [groupByEquipment, setGroupByEquipment] = useState(false);
@@ -60,12 +64,20 @@ const MaintenanceTable: React.FC = () => {
   }
 
   // Apply filtering
-  const filteredData = processedData.filter(
-    (record) =>
-      record.equipmentName.toLowerCase().includes(search.toLowerCase()) &&
-      (statusFilter ? record.completionStatus === statusFilter : true)
-  );
+  const filteredData = processedData.filter((record) => {
+    // Check if the equipment name matches search
+    const matchesSearch = record.equipmentName.toLowerCase().includes(search.toLowerCase());
 
+    // Check if status matches filter
+    const matchesStatus = statusFilter ? record.completionStatus === statusFilter : true;
+
+    // Check if record date is within the selected date range
+    const recordDate = new Date(record.date);
+    const matchesDateRange =
+      (!startDate || recordDate >= new Date(startDate)) && (!endDate || recordDate <= new Date(endDate));
+
+    return matchesSearch && matchesStatus && matchesDateRange;
+  });
 
   return (
     <div className="p-6">
@@ -89,6 +101,21 @@ const MaintenanceTable: React.FC = () => {
           <option value="Complete">Complete</option>
           <option value="Pending">Pending</option>
         </select>
+
+        {/* Date range filters */}
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="p-2 border rounded-md"
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="p-2 border rounded-md"
+        />
+
         <button
           onClick={() => setGroupByEquipment((prev) => !prev)}
           className="bg-blue-500 text-white px-4 py-2 rounded-md"

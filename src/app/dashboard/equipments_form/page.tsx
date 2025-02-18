@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { equipmentSchema, EquipmentFormData } from "./zodSchemas";
@@ -9,34 +9,39 @@ import { Department, Status } from "./enum";
 const FormEquipment: React.FC = () => {
   // React Hook Form setup with Zod validation
   const {
-    register, // Registers input fields with React Hook Form
-    handleSubmit, // Handles form submission
-    formState: { errors }, // Tracks form validation errors
-    reset, // Resets the form after successful submission
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
   } = useForm<EquipmentFormData>({
-    resolver: zodResolver(equipmentSchema), // Integrates Zod schema validation
+    resolver: zodResolver(equipmentSchema),
   });
+
+  const [isMounted, setIsMounted] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+
+  // Ensure component is mounted before running Playwright tests
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Function to handle form submission
   const onSubmit: SubmitHandler<EquipmentFormData> = (data) => {
-    // Retrieve existing equipment data from localStorage or set an empty array
     const existingData: EquipmentFormData[] = JSON.parse(localStorage.getItem("equipmentData") || "[]");
 
-    // Create a new equipment object, ensuring a unique ID
     const newEquipment: EquipmentFormData = {
       ...data,
-      id: data.id ?? Date.now(), // Use existing ID if available; otherwise, generate one
+      id: data.id ?? Date.now(),
     };
 
-    // Save updated equipment list to localStorage
     localStorage.setItem("equipmentData", JSON.stringify([...existingData, newEquipment]));
+    console.log("Updated Equipment Data:", JSON.parse(localStorage.getItem("equipmentData") || "[]"));
 
-    // Show success alert
-    alert("Equipment added successfully!");
-
-    // Reset the form fields
+    setSuccessMessage("Equipment added successfully!"); // Show success message in DOM
     reset();
   };
+
+  if (!isMounted) return null; // Prevents hydration errors in Next.js
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
@@ -49,7 +54,7 @@ const FormEquipment: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg space-y-4 mt-8">
         <h2 className="text-2xl font-bold text-center text-gray-700">Equipment Form</h2>
 
-        {/* Equipment Name Input */}
+        {/* Equipment Name */}
         <div>
           <label className="block text-gray-600 font-medium">Name</label>
           <input
@@ -59,7 +64,7 @@ const FormEquipment: React.FC = () => {
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
 
-        {/* Equipment Location Input */}
+        {/* Equipment Location */}
         <div>
           <label className="block text-gray-600 font-medium">Location</label>
           <input
@@ -85,7 +90,7 @@ const FormEquipment: React.FC = () => {
           {errors.department && <p className="text-red-500 text-sm">{errors.department.message}</p>}
         </div>
 
-        {/* Model Input */}
+        {/* Model */}
         <div>
           <label className="block text-gray-600 font-medium">Model</label>
           <input
@@ -95,7 +100,7 @@ const FormEquipment: React.FC = () => {
           {errors.model && <p className="text-red-500 text-sm">{errors.model.message}</p>}
         </div>
 
-        {/* Serial Number Input */}
+        {/* Serial Number */}
         <div>
           <label className="block text-gray-600 font-medium">Serial Number</label>
           <input
@@ -105,14 +110,14 @@ const FormEquipment: React.FC = () => {
           {errors.serialNumber && <p className="text-red-500 text-sm">{errors.serialNumber.message}</p>}
         </div>
 
-        {/* Install Date Input */}
+        {/* Install Date */}
         <div>
           <label className="block text-gray-600 font-medium">Install Date</label>
           <input
             type="date"
             className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             {...register("installDate")}
-            max={new Date().toISOString().split("T")[0]} // Prevents selecting future dates
+            max={new Date().toISOString().split("T")[0]}
           />
           {errors.installDate && <p className="text-red-500 text-sm">{errors.installDate.message}</p>}
         </div>
@@ -138,9 +143,16 @@ const FormEquipment: React.FC = () => {
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
         >
-          Submit
+          Add Equipment
         </button>
       </form>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="bg-green-500 text-white p-2 rounded-md mt-4 text-center">
+          {successMessage}
+        </div>
+      )}
     </div>
   );
 };
