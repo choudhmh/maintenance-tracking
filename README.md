@@ -2,7 +2,7 @@
 
 The Equipment Maintenance Dashboard is a React (Next.js) application designed to track, monitor, and analyze maintenance activities for various equipment. It provides key insights into equipment status, maintenance history, and department-level workload using interactive charts and a user-friendly interface.
 
-🚀 Features
+## 🚀 Features
 
 1️⃣ Equipment Management Form
 
@@ -35,13 +35,15 @@ Maintenance Records Table:
 - Maintenance Hours by Department 📈 (Bar Chart - Department-wise maintenance workload)
 - Recent Maintenance Activities 📋 (List of latest maintenance logs)
 
-Tech Stack
+## Tech Stack
 
 - Frontend: Next.js (React), TypeScript, Tailwind CSS
 - State Management: React Hooks (useState, useEffect)
 - Data Visualization: Recharts (PieChart, BarChart)
 - Form Handling & Validation: Zod
 - Local Storage: Used to persist equipment and maintenance data
+
+## Folder Structure
 
 ```
 📦 src
@@ -78,40 +80,35 @@ Tech Stack
 To clone and run this application, you'll need Git and Node.js installed on your computer. Once installed from your command line type:
 
 ```
-git clone: https://github.com/choudhmh/maintenance-tracking
+git clone https://github.com/choudhmh/maintenance-tracking
+```
 
 then:
 
+```
 cd maintenance-tracking
 ```
 
 ## Installation Dependencies
 
-Now install te important dependencies:
+Now install the important dependencies:
 
 ```
 npm install
 or
 yarn install
+```
 
 Once installation completed.
 Start the development server:
 
+```
 npm run dev
 or
 yarn dev
 ```
 
 The application should now be running at http://localhost:3000.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
