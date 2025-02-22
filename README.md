@@ -3,8 +3,8 @@
 The Equipment Maintenance Dashboard is a React (Next.js) application designed to track, monitor, and analyze maintenance activities for various equipment. It provides key insights into equipment status, maintenance history, and department-level workload using interactive charts and a user-friendly interface.
 
 🎥 **Demo Video:**  
-The video demonstarte how it functions currently
-[Watch on YouTube]([https://www.youtube.com/watch?v=YOUR_VIDEO_ID](https://drive.google.com/file/d/1f4lqdK72dllvh66_o2AoTZvWPu7b7-iZ/view?usp=sharing))
+The video demonstarte how it functions currently:
+https://drive.google.com/file/d/1f4lqdK72dllvh66_o2AoTZvWPu7b7-iZ/view?usp=sharing 
 
 
 ## 🚀 Features
@@ -115,12 +115,8 @@ yarn dev
 
 The application should now be running at http://localhost:3000.
 
-## Deploy on Vercel
+No other dependecies should be required to download as the onea needed are already downloaded / installed on the package.json file
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Testing
+Testing was done using Playwright to make sure everythign fully works
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-```
-
-```
