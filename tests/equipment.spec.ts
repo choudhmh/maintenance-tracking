@@ -14,7 +14,7 @@ const validEquipment = {
 
 // Test 1: Should create new equipment with valid data
 test("Should create new equipment with valid data", async ({ page }) => {
-  await page.goto("http://localhost:3001/dashboard/equipments_form");
+  await page.goto("http://localhost:3000/dashboard/equipments_form");
   await page.waitForSelector("form");
 
   // Fill out the form with valid data
@@ -36,7 +36,7 @@ test("Should create new equipment with valid data", async ({ page }) => {
 
 // Test 2: Should show validation errors for invalid equipment data
 test("Should show validation errors for invalid equipment data", async ({ page }) => {
-  await page.goto("http://localhost:3001/dashboard/equipments_form");
+  await page.goto("http://localhost:3000/dashboard/equipments_form");
   await page.click("button[type='submit']"); // Submit without filling fields
 
   // Check for required field validation errors
@@ -74,7 +74,7 @@ test("Should update status for selected equipment", async ({ page, context }) =>
     localStorage.setItem("equipmentData", JSON.stringify(data));
   }, sampleData);
 
-  await page.goto("http://localhost:3001/dashboard/equipments_form/equipment_table", {
+  await page.goto("http://localhost:3000/dashboard/equipments_form/equipment_table", {
     waitUntil: "networkidle",
   });
 
@@ -136,7 +136,7 @@ test("Should filter equipment table", async ({ page, context }) => {
     localStorage.setItem("equipmentData", JSON.stringify(data));
   }, sampleData);
 
-  await page.goto("http://localhost:3001/dashboard/equipments_form/equipment_table", {
+  await page.goto("http://localhost:3000/dashboard/equipments_form/equipment_table", {
     waitUntil: "networkidle",
   });
 

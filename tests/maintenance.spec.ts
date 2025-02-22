@@ -14,7 +14,7 @@ test.describe("Maintenance Record Tests", () => {
     });
 
     // Navigate to the form page
-    await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form", {
+    await page.goto("http://localhost:3000/dashboard/equipments_form/maintenance_form", {
       waitUntil: "networkidle",
     });
   });
@@ -86,7 +86,7 @@ test.describe("Maintenance Record Tests", () => {
     });
 
     // Navigate to the maintenance table page
-    await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form", {
+    await page.goto("http://localhost:3000/dashboard/equipments_form/maintenance_form", {
       waitUntil: "networkidle",
     });
   });
@@ -113,7 +113,7 @@ test.describe("Maintenance Record Tests", () => {
     });
 
     // Navigate to the maintenance table page
-    await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form/maintenance_table", {
+    await page.goto("http://localhost:3000/dashboard/equipments_form/maintenance_form/maintenance_table", {
       waitUntil: "networkidle",
     });
 
@@ -123,7 +123,7 @@ test.describe("Maintenance Record Tests", () => {
 
   //test 4
   // test("Should filter maintenance records by date range", async ({ page }) => {
-  //   await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form/maintenance_table");
+  //   await page.goto("http://localhost:3000/dashboard/equipments_form/maintenance_form/maintenance_table");
   //   await page.waitForLoadState("domcontentloaded");
     
   //   await page.addInitScript(() => {
@@ -162,7 +162,7 @@ test.describe("Maintenance Record Tests", () => {
   //   });
   
   //   // ✅ Navigate to the correct maintenance table page
-  //   await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form/maintenance_table", {
+  //   await page.goto("http://localhost:3000/dashboard/equipments_form/maintenance_form/maintenance_table", {
   //     waitUntil: "domcontentloaded",
   //   });
   
