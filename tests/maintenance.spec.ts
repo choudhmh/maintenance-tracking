@@ -19,6 +19,7 @@ test.describe("Maintenance Record Tests", () => {
     });
   });
 
+  //Test 1
   test("Should create new maintenance record", async ({ page }) => {
     // Mock the alert function
     await page.evaluate(() => {
@@ -54,8 +55,9 @@ test.describe("Maintenance Record Tests", () => {
     expect(records[0].technician).toBe("John Doe");
   });
 
+//Test 2
   test("Should reject negative or over 24 hours for maintenance hours", async ({ page }) => {
-    // Mock localStorage data for equipment and maintenance records
+
     await page.addInitScript(() => {
       window.localStorage.setItem(
         "equipmentData",
@@ -84,8 +86,116 @@ test.describe("Maintenance Record Tests", () => {
     });
 
     // Navigate to the maintenance table page
-    await page.goto("http://localhost:3001/dashboard/maintenance_table", {
+    await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form", {
       waitUntil: "networkidle",
     });
   });
+
+//test 3
+  test("Should show equipment name in maintenance table", async ({ page }) => {
+    // Mock localStorage data for maintenance records
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        "maintenanceRecords",
+        JSON.stringify([
+          {
+            id: 1,
+            equipmentId: 1,
+            date: "2023-10-01",
+            technician: "John Doe",
+            hoursSpent: 5,
+            description: "Routine checkup",
+            priority: "High",
+            completionStatus: "Complete",
+          },
+        ])
+      );
+    });
+
+    // Navigate to the maintenance table page
+    await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form/maintenance_table", {
+      waitUntil: "networkidle",
+    });
+
+    // Verify that the table displays "Excavator" for the equipment name
+    await expect(page.locator("td:text('Excavator')")).toBeVisible();
+  });
+
+  //test 4
+  // test("Should filter maintenance records by date range", async ({ page }) => {
+  //   await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form/maintenance_table");
+  //   await page.waitForLoadState("domcontentloaded");
+    
+  //   await page.addInitScript(() => {
+  //     window.localStorage.setItem(
+  //       "maintenanceRecords",
+  //       JSON.stringify([
+  //         {
+  //           id: 1,
+  //           equipmentId: 1,
+  //           date: "2023-09-15",
+  //           technician: "Alice",
+  //           hoursSpent: 4,
+  //           description: "Inspection",
+  //           priority: "Medium",
+  //           completionStatus: "Complete",
+  //         },
+  //         {
+  //           id: 2,
+  //           equipmentId: 2,
+  //           date: "2023-10-05",
+  //           technician: "Bob",
+  //           hoursSpent: 6,
+  //           description: "Engine repair",
+  //           priority: "High",
+  //           completionStatus: "Incomplete",
+  //         },
+  //       ])
+  //     );
+  //     window.localStorage.setItem(
+  //       "equipmentData",
+  //       JSON.stringify([
+  //         { id: 1, name: "Excavator" },
+  //         { id: 2, name: "Crane" },
+  //       ])
+  //     );
+  //   });
+  
+  //   // ✅ Navigate to the correct maintenance table page
+  //   await page.goto("http://localhost:3001/dashboard/equipments_form/maintenance_form/maintenance_table", {
+  //     waitUntil: "domcontentloaded",
+  //   });
+  
+  //   // 📸 Screenshot before checking for the table
+  //   await page.screenshot({ path: "debug-before-table.png", fullPage: true });
+  
+  //   // ⏳ Wait for the table to be visible
+  //   await page.waitForTimeout(2000);
+  //   await page.locator("table tbody tr").first().waitFor();
+  
+  //   // 🔍 Debug: Log records found in table
+  //   const recordsOnPage = await page.evaluate(() => {
+  //     return Array.from(document.querySelectorAll("table tbody tr")).map(row => (row as HTMLElement).innerText);
+  //   });
+    
+  //   console.log("Table rows:", recordsOnPage);
+  
+  //   // ✅ Wait for date filters to be ready
+  //   await page.locator('input[name="startDate"]').waitFor();
+  //   await page.locator('input[name="endDate"]').waitFor();
+  
+  //   // 🗓 Set date range
+  //   await page.fill('input[name="startDate"]', "2023-10-01");
+  //   await page.fill('input[name="endDate"]', "2023-10-10");
+  
+  //   // ⏳ Allow React time to update
+  //   await page.waitForTimeout(1000);
+  
+  //   // ✅ Expect only Bob's record to be visible
+  //   await expect(page.locator("td:text('Bob')")).toBeVisible();
+  //   await expect(page.locator("td:text('Alice')")).not.toBeVisible();
+  // });
+  
+  
+  
 })
