@@ -2,6 +2,11 @@
 
 The Equipment Maintenance Dashboard is a React (Next.js) application designed to track, monitor, and analyze maintenance activities for various equipment. It provides key insights into equipment status, maintenance history, and department-level workload using interactive charts and a user-friendly interface.
 
+🎥 **Demo Video:**  
+The video demonstarte how it functions currently
+[Watch on YouTube]([https://www.youtube.com/watch?v=YOUR_VIDEO_ID](https://drive.google.com/file/d/1f4lqdK72dllvh66_o2AoTZvWPu7b7-iZ/view?usp=sharing))
+
+
 ## 🚀 Features
 
 1️⃣ Equipment Management Form
