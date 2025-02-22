@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Maintenance Record Tests", () => {
   test.beforeEach(async ({ page }) => {
-    // Mock localStorage data for equipment
+ 
     await page.addInitScript(() => {
       window.localStorage.setItem(
         "equipmentData",
@@ -21,7 +21,7 @@ test.describe("Maintenance Record Tests", () => {
 
   //Test 1
   test("Should create new maintenance record", async ({ page }) => {
-    // Mock the alert function
+   
     await page.evaluate(() => {
       window.alert = (message) => {
         console.log(`Alert: ${message}`);
