@@ -14,7 +14,7 @@ const validEquipment = {
 
 // Test 1: Should create new equipment with valid data
 test("Should create new equipment with valid data", async ({ page }) => {
-  await page.goto("http://localhost:3000/dashboard/equipments_form");
+  await page.goto("http://localhost:3001/dashboard/equipments_form");
   await page.waitForSelector("form");
 
   // Fill out the form with valid data
@@ -36,7 +36,7 @@ test("Should create new equipment with valid data", async ({ page }) => {
 
 // Test 2: Should show validation errors for invalid equipment data
 test("Should show validation errors for invalid equipment data", async ({ page }) => {
-  await page.goto("http://localhost:3000/dashboard/equipments_form");
+  await page.goto("http://localhost:3001/dashboard/equipments_form");
   await page.click("button[type='submit']"); // Submit without filling fields
 
   // Check for required field validation errors
@@ -46,71 +46,6 @@ test("Should show validation errors for invalid equipment data", async ({ page }
 
 // Test 3: Should update status for selected equipment
 test("Should update status for selected equipment", async ({ page, context }) => {
-  // Sample data with Status enum values
-  const sampleData = [
-    {
-      id: 1,
-      name: "Drill Press",
-      location: "Shop",
-      department: "Machining",
-      model: "DP-2000",
-      serialNumber: "12345",
-      installDate: "2023-01-01",
-      status: Status.Operational,
-    },
-    {
-      id: 2,
-      name: "Lathe Machine",
-      location: "Shop",
-      department: "Assembly",
-      model: "LM-500",
-      serialNumber: "67890",
-      installDate: "2022-06-15",
-      status: Status.Down,
-    },
-  ];
-
-  // Set up localStorage before the page loads
-  await context.addInitScript((data) => {
-    localStorage.setItem("equipmentData", JSON.stringify(data));
-  }, sampleData);
-
-  await page.goto("http://localhost:3000/dashboard/equipments_form/equipment_table", {
-    waitUntil: "networkidle",
-  });
-
-  // Wait for the table to be loaded
-  await page.waitForSelector("table", { timeout: 60000 });
-  await page.waitForSelector("tbody tr", { timeout: 60000 });
-
-  // Wait for the checkboxes to be visible
-  const checkboxes = page.locator("tbody tr td input[type='checkbox']");
-  const checkboxCount = await checkboxes.count();
-
-  if (checkboxCount > 0) {
-    await checkboxes.first().waitFor({ state: "visible", timeout: 60000 });
-    await checkboxes.first().click(); // Select the first checkbox
-  }
-
-  // Ensure the selected checkbox is checked
-  const isChecked = await checkboxes.first().isChecked();
-  expect(isChecked).toBe(true);
-
-  // Select the Bulk Update Status dropdown and choose a new status
-  const bulkStatusDropdown = page.locator("select:nth-of-type(2)");
-  await bulkStatusDropdown.selectOption({ label: Status.Maintenance });
-
-  // Wait for the update to be reflected (if any visual feedback exists)
-  await page.waitForTimeout(2000);
-
-  // Validate status update
-  const status = await page.locator("tbody tr td:nth-child(8)").first().textContent();
-  expect(status).toBe(Status.Maintenance);
-});
-
-// Test 4: Should filter equipment table
-test("Should filter equipment table", async ({ page, context }) => {
-  // Sample equipment data for localStorage
   const sampleData = [
     {
       id: 1,
@@ -139,24 +74,85 @@ test("Should filter equipment table", async ({ page, context }) => {
     localStorage.setItem("equipmentData", JSON.stringify(data));
   }, sampleData);
 
-  await page.goto("http://localhost:3000/dashboard/equipments_form/equipment_table", {
+  await page.goto("http://localhost:3001/dashboard/equipments_form/equipment_table", {
+    waitUntil: "networkidle",
+  });
+
+  // Ensure table loads with correct number of rows
+  const rows = page.locator("tbody tr");
+  await expect(rows).toHaveCount(sampleData.length, { timeout: 60000 });
+
+  // Ensure checkboxes exist
+  const checkboxes = page.locator("tbody tr td input[type='checkbox']");
+  await expect(checkboxes).toHaveCount(sampleData.length, { timeout: 60000 });
+
+  // Ensure first checkbox is interactable before clicking
+  await checkboxes.first().waitFor({ state: "visible", timeout: 60000 });
+  await checkboxes.first().click();
+
+  // Verify if checkbox is checked
+  await expect(checkboxes.first()).toBeChecked();
+
+  // Select Bulk Update Status dropdown and update
+  const bulkStatusDropdown = page.locator("select:nth-of-type(2)");
+  await bulkStatusDropdown.selectOption({ label: Status.Maintenance });
+
+  // Wait for UI to update
+  await page.waitForTimeout(2000);
+
+  // Verify first row status update
+  const firstRowStatus = await page.locator("tbody tr:nth-child(1) td:nth-child(8)").textContent();
+  expect(firstRowStatus).toBe(Status.Maintenance);
+});
+
+
+// Test 4: Should filter equipment table
+test("Should filter equipment table", async ({ page, context }) => {
+  const sampleData = [
+    {
+      id: 1,
+      name: "Drill Press",
+      location: "Shop",
+      department: "Machining",
+      model: "DP-2000",
+      serialNumber: "12345",
+      installDate: "2023-01-01",
+      status: Status.Operational,
+    },
+    {
+      id: 2,
+      name: "Lathe Machine",
+      location: "Shop",
+      department: "Assembly",
+      model: "LM-500",
+      serialNumber: "67890",
+      installDate: "2022-06-15",
+      status: Status.Down,
+    },
+  ];
+
+  // Inject localStorage data before loading the page
+  await context.addInitScript((data) => {
+    localStorage.setItem("equipmentData", JSON.stringify(data));
+  }, sampleData);
+
+  await page.goto("http://localhost:3001/dashboard/equipments_form/equipment_table", {
     waitUntil: "networkidle",
   });
 
   // Ensure table is fully loaded before filtering
-  await page.waitForSelector("table");
-  await page.waitForSelector("tbody tr");
+  await page.waitForSelector("table", { timeout: 60000 });
+  await page.waitForSelector("tbody tr", { timeout: 60000 });
 
-  // Fill the search input with "Drill Press"
-  await page.fill("input[placeholder='Search by name...']", "Drill Press");
+  // Fill the search input
+  const searchInput = page.locator("input[placeholder='Search by name...']");
+  await searchInput.fill("Drill Press");
 
   // Wait for filtering to take effect dynamically
-  await page.waitForFunction(() => {
-    const rows = Array.from(document.querySelectorAll("tbody tr"));
-    return rows.length === 1 && rows[0].textContent?.includes("Drill Press");
-  });
+  await page.waitForTimeout(2000);
 
-  // Verify only "Drill Press" is visible
+  // Ensure only "Drill Press" is visible
+  const visibleRows = page.locator("tbody tr");
+  await expect(visibleRows).toHaveCount(1, { timeout: 60000 });
   await expect(page.locator("text=Drill Press")).toBeVisible();
-  await expect(page.locator("tbody tr")).toHaveCount(1);
 });

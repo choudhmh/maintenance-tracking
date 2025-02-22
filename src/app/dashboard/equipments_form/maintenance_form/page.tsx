@@ -1,105 +1,80 @@
-"use client";
+"use client"; // Enables React's client-side rendering
 
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { maintenanceSchema } from "../zodSchemas";
-import { MaintenanceType, PriorityLevel, CompletionStatus } from "../enum";
-import { Equipment } from "../interfaces";
+import { maintenanceSchema } from "../zodSchemas"; // Import schema for form validation
+import { MaintenanceType, PriorityLevel, CompletionStatus } from "../enum"; // Import enums
+import { Equipment} from "../interfaces";
+
 
 type MaintenanceFormData = z.infer<typeof maintenanceSchema>;
 
 const FormMaintenance: React.FC = () => {
+  // State to store equipment list
   const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true); 
 
+  // Fetch equipment data from local storage on component mount
   useEffect(() => {
-    try {
-      const storedEquipment = JSON.parse(localStorage.getItem("equipmentData") || "[]");
-      setEquipmentList(storedEquipment);
-    } catch (error) {
-      console.error("Error reading from localStorage", error);
-      setEquipmentList([]);
-    } finally {
-      setIsLoading(false);
-    }
+    const storedEquipment = JSON.parse(localStorage.getItem("equipmentData") || "[]");
+    setEquipmentList(storedEquipment);
   }, []);
 
+  // Initialize react-hook-form with validation resolver
   const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-    trigger,
+    register, 
+    handleSubmit, 
+    control, 
+    reset, 
+    formState: { errors }, 
   } = useForm<MaintenanceFormData>({
-    resolver: zodResolver(maintenanceSchema),
+    resolver: zodResolver(maintenanceSchema), // Validate with Zod schema
     defaultValues: {
-      partsReplaced: [],
+      partsReplaced: [], 
     },
   });
+
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "partsReplaced",
   });
 
-  const onSubmit: SubmitHandler<MaintenanceFormData> = async (data) => {
-    const isValid = await trigger("hoursSpent");
-    if (!isValid) {
-      console.log("Validation failed for hoursSpent");
-      return;
-    }
 
-    console.log("Form Data Submitted:", data);
-
+  const onSubmit: SubmitHandler<MaintenanceFormData> = (data) => {
+    // Retrieve existing maintenance records from local storage
     const existingData = JSON.parse(localStorage.getItem("maintenanceRecords") || "[]");
 
+    // Create new maintenance record with unique ID
     const newRecord = {
       ...data,
-      equipmentId: parseInt(data.equipmentId),
-      id: Date.now(),
+      equipmentId: parseInt(data.equipmentId), // Ensure equipmentId is stored as number
+      id: Date.now(), // Unique identifier
     };
 
+    // Save updated maintenance records to local storage
     localStorage.setItem("maintenanceRecords", JSON.stringify([...existingData, newRecord]));
 
-    setIsSuccess(true);
-    reset();
-
-    setTimeout(() => setIsSuccess(false), 5000);
+    alert("Maintenance record added successfully!"); // Notify user
+    reset(); 
   };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
+      {/* Form header */}
       <div className="w-full bg-blue-600 text-white py-4 text-center font-bold text-xl">
         Maintenance Record Form
       </div>
-
-      {/* Success Message */}
-      {isSuccess && (
-        <div
-          className="bg-green-500 text-white py-2 px-4 rounded mt-4 text-center"
-          aria-live="assertive"
-        >
-          ✅ Maintenance record added successfully!
-        </div>
-      )}
 
       {/* Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg space-y-4 mt-8"
       >
-        {/* Equipment Selection */}
         <div>
           <label className="font-bold">Equipment</label>
-          <select
-            className="w-full p-2 border rounded-md"
-            {...register("equipmentId", { required: "Equipment selection is required" })}
-            disabled={isLoading || equipmentList.length === 0}
-          >
+          <select className="w-full p-2 border rounded-md" {...register("equipmentId")}>
             <option value="">Select Equipment</option>
             {equipmentList.map((eq) => (
               <option key={eq.id} value={eq.id}>
@@ -110,18 +85,18 @@ const FormMaintenance: React.FC = () => {
           {errors.equipmentId && <p className="text-red-500 text-sm">{errors.equipmentId.message}</p>}
         </div>
 
-        {/* Date */}
         <div>
           <label className="font-bold">Date</label>
           <input
             type="date"
             className="w-full p-2 border rounded-md"
-            {...register("date", { required: "Date is required" })}
+            {...register("date")}
+            max={new Date().toISOString().split("T")[0]} // Restrict future dates
           />
           {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
         </div>
 
-        {/* Maintenance Type */}
+      
         <div>
           <label className="font-bold">Type</label>
           <select className="w-full p-2 border rounded-md" {...register("type")}>
@@ -133,44 +108,59 @@ const FormMaintenance: React.FC = () => {
           </select>
         </div>
 
-        {/* Technician */}
+     
         <div>
           <label className="font-bold">Technician</label>
-          <input
-            className="w-full p-2 border rounded-md"
-            {...register("technician", { required: "Technician name is required" })}
-          />
+          <input className="w-full p-2 border rounded-md" {...register("technician")} />
+          {errors.technician && <p className="text-red-500 text-sm">{errors.technician.message}</p>}
         </div>
 
-        {/* Hours Spent */}
+      
         <div>
           <label className="font-bold">Hours Spent</label>
-          <input type="number" className="w-full p-2 border rounded-md" {...register("hoursSpent")} />
+          <input
+            type="number"
+            className="w-full p-2 border rounded-md"
+            {...register("hoursSpent", { valueAsNumber: true })}
+          />
+          {errors.hoursSpent && <p className="text-red-500 text-sm">{errors.hoursSpent.message}</p>}
         </div>
 
-        {/* Description */}
+        {/* Maintenance description */}
         <div>
           <label className="font-bold">Description</label>
           <textarea className="w-full p-2 border rounded-md" {...register("description")}></textarea>
+          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
         </div>
 
-        {/* Parts Replaced */}
+        {/* Parts replaced section */}
         <div>
           <label className="font-bold">Parts Replaced</label>
           {fields.map((field, index) => (
             <div key={field.id} className="flex space-x-2 mb-2">
-              <input className="w-full p-2 border rounded-md" {...register(`partsReplaced.${index}` as const)} />
-              <button type="button" onClick={() => remove(index)} className="bg-red-500 text-white px-2 py-1 rounded">
+              <input
+                className="w-full p-2 border rounded-md"
+                {...register(`partsReplaced.${index}` as const)}
+              />
+              <button
+                type="button"
+                onClick={() => remove(index)}
+                className="bg-red-500 text-white px-2 py-1 rounded"
+              >
                 X
               </button>
             </div>
           ))}
-          <button type="button" onClick={() => append("")} className="bg-green-500 text-white px-4 py-2 rounded-md">
+          <button
+            type="button"
+            onClick={() => append("")}
+            className="bg-green-500 text-white px-4 py-2 rounded-md"
+          >
             + Add Part
           </button>
         </div>
 
-        {/* Priority */}
+        {/* Priority selection */}
         <div>
           <label className="font-bold">Priority</label>
           <select className="w-full p-2 border rounded-md" {...register("priority")}>
@@ -182,7 +172,7 @@ const FormMaintenance: React.FC = () => {
           </select>
         </div>
 
-        {/* Completion Status */}
+        {/* Completion status selection */}
         <div>
           <label className="font-bold">Completion Status</label>
           <select className="w-full p-2 border rounded-md" {...register("completionStatus")}>
@@ -194,8 +184,11 @@ const FormMaintenance: React.FC = () => {
           </select>
         </div>
 
-        {/* Submit Button */}
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">
+        {/* Submit button */}
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
+        >
           Submit
         </button>
       </form>
