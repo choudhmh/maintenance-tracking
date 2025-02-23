@@ -126,21 +126,30 @@ To test the code, in one termninal make sure the application is running:
 
 which will load up http://localhost:3000 (might need to load that page up on a browser if it doesn't automatically open)
 
+
 Open another terminal and cd into the tests folder:
 ``` cd tests ```
+
 
 then either you test each file individually or test both at once.
 For individuall testing (which I reccomend) type in:
 
-``` npx playwright test tests/equipment.spec.ts ``` 
+
+``` 
+npx playwright test tests/equipment.spec.ts 
 
 which will run the test. When that is complete test the other file: 
 
-``` npx playwright test tests/maintenance.spec.ts ```
+npx playwright test tests/maintenance.spec.ts
+```
+
 
 If you want to test both at once:
 
-``` npx playwright test ```
+``` npx playwright test  ```
+
+
+
 
 Hope this is clear!
 
