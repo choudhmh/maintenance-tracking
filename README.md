@@ -120,7 +120,7 @@ No other dependecies should be required to download as the onea needed are alrea
 ## Testing Procedure
 Testing was done using Playwright to make sure everything fully works according to the requirements.
 
-To test the code, in one termninal make the the application is running: 
+To test the code, in one termninal make sure the application is running: 
 
 ``` npm run dev ```
 
@@ -130,7 +130,7 @@ Open another terminal and cd into the tests folder:
 ``` cd tests ```
 
 then either you test each file individually or test both at once.
-For individuall testing (which i reccomend) type in:
+For individuall testing (which I reccomend) type in:
 
 ``` npx playwright test tests/equipment.spec.ts ``` 
 
