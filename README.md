@@ -3,7 +3,7 @@
 The Equipment Maintenance Dashboard is a React (Next.js) application designed to track, monitor, and analyze maintenance activities for various equipment. It provides key insights into equipment status, maintenance history, and department-level workload using interactive charts and a user-friendly interface.
 
 🎥 **Demo Video:**  
-The video demonstarte how it functions currently:
+The video demonstarte how it functions currently can be found here:
 https://drive.google.com/file/d/1f4lqdK72dllvh66_o2AoTZvWPu7b7-iZ/view?usp=sharing 
 
 
@@ -30,7 +30,7 @@ Equipment Table:
 Maintenance Records Table:
 
 - Display all maintenance logs
-- Include equipment name (joined from equipment data)
+- Includes equipment name (retrived from equipment data table)
 - Enable sorting and filtering
 - Group by equipment for better organization
 
@@ -115,9 +115,10 @@ yarn dev
 
 The application should now be running at http://localhost:3000.
 
-No other dependecies should be required to download as the onea needed are already downloaded / installed on the package.json file
+No other dependecies should be required to download as the ones needed are already downloaded / installed on the package.json file
 
 ## Testing Procedure
+
 Testing was done using Playwright to make sure everything fully works according to the requirements.
 
 To test the code, in one termninal make sure the application is running: 
@@ -138,7 +139,7 @@ For individuall testing (which I reccomend) type in:
 ``` 
 npx playwright test tests/equipment.spec.ts 
 
-which will run the test. When that is complete test the other file: 
+which will run the test. When that testis complete; test the other file: 
 
 npx playwright test tests/maintenance.spec.ts
 ```
@@ -146,11 +147,17 @@ npx playwright test tests/maintenance.spec.ts
 
 If you want to test both at once:
 
-``` npx playwright test  ```
+```
+npx playwright test  
+```
+
+The testing will showcase any errors you have. Make sure when testing on the code each page has the correct url to locate the tests, example:
+
+```
+http://localhost:3000/dashboard/equipments_form
+```
 
 
-
-
-Hope this is clear!
+Hope this helps & clear!
 
 ## Thank You, Happy Coding! ##
