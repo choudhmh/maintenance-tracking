@@ -117,6 +117,31 @@ The application should now be running at http://localhost:3000.
 
 No other dependecies should be required to download as the onea needed are already downloaded / installed on the package.json file
 
-## Testing
-Testing was done using Playwright to make sure everythign fully works
+## Testing Procedure
+Testing was done using Playwright to make sure everything fully works according to the requirements.
 
+To test the code, in one termninal make the the application is running: 
+
+``` npm run dev ```
+
+which will load up http://localhost:3000 (might need to load that page up on a browser if it doesn't automatically open)
+
+Open another terminal and cd into the tests folder:
+``` cd tests ```
+
+then either you test each file individually or test both at once.
+For individuall testing (which i reccomend) type in:
+
+``` npx playwright test tests/equipment.spec.ts ``` 
+
+which will run the test. When that is complete test the other file: 
+
+``` npx playwright test tests/maintenance.spec.ts ```
+
+If you want to test both at once:
+
+``` npx playwright test ```
+
+Hope this is clear!
+
+## Thank You, Happy Coding! ##
